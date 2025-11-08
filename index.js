@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
 
 
 
-// Get all foods
+// Get foods
 app.get("/foods", async (req, res) => {
   try {
     const foods = await foodsCollection.find().sort({ quantity: -1 }).limit(6).toArray();
@@ -76,6 +76,19 @@ app.get("/foods/:id", async (req, res) => {
     res.status(500).send({ message: "Failed to fetch food" });
   }
 });
+
+
+// Get all foods
+
+app.get("/all-foods", async (req, res) => {
+  try {
+    const foods = await foodsCollection.find().sort({ quantity: -1 }).toArray();
+    res.send(foods);
+  } catch (err) {
+    res.status(500).send({ message: "Failed to fetch all foods" });
+  }
+});
+
 
 
 

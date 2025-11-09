@@ -147,6 +147,19 @@ async function run() {
       }
     });
 
+    app.get("/my-food-requests", async (req, res) => {
+      try {
+        const email = req.query.email;
+        const requests = await foodRequestsCollection
+          .find({ userEmail: email })
+          .toArray();
+        res.send(requests);
+      } catch (err) {
+        console.error("Error fetching requests:", err);
+        res.status(500).send({ message: "Failed to fetch requests" });
+      }
+    });
+
     // Patch food request status
     app.patch("/food-requests/:requestId", async (req, res) => {
       try {

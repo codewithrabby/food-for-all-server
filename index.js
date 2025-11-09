@@ -79,6 +79,7 @@ async function run() {
         const foodData = req.body;
         const newFood = {
           ...foodData,
+          quantity: Number(foodData.quantity),
           status: "available",
           createdAt: new Date(),
         };
@@ -123,6 +124,7 @@ async function run() {
       try {
         const id = req.params.id;
         const updatedFood = req.body;
+        delete updatedFood._id;
         const result = await foodsCollection.updateOne(
           { _id: new ObjectId(id) },
           { $set: updatedFood }
@@ -185,7 +187,6 @@ async function run() {
             { $set: { status: "rejected" } }
           );
         }
-
         res.send({ message: "Request updated" });
       } catch (err) {
         console.error("Error updating request:", err);

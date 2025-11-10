@@ -52,6 +52,9 @@ async function run() {
       try {
         const id = req.params.id;
         const food = await foodsCollection.findOne({ _id: new ObjectId(id) });
+        if (!food) {
+          return res.status(404).send({ message: "Food not found" });
+        }
         res.send(food);
       } catch (err) {
         console.error("Error fetching single food:", err);
@@ -66,6 +69,7 @@ async function run() {
           .find()
           .sort({ quantity: -1 })
           .toArray();
+        console.log(foods);
         res.send(foods);
       } catch (err) {
         console.error("Error fetching all foods:", err);
@@ -80,7 +84,7 @@ async function run() {
         const newFood = {
           ...foodData,
           quantity: Number(foodData.quantity),
-          status: "available",
+          status: "Available",
           createdAt: new Date(),
         };
         const result = await foodsCollection.insertOne(newFood);
@@ -152,6 +156,7 @@ async function run() {
     app.get("/my-food-requests", async (req, res) => {
       try {
         const email = req.query.email;
+        console.log(email);
         const requests = await foodRequestsCollection
           .find({ userEmail: email })
           .toArray();
